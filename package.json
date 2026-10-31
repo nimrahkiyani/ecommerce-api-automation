@@ -1,0 +1,17 @@
+{
+  "name": "ecommerce-api-automation",
+  "version": "1.0.0",
+  "description": "E-commerce API Automation using Postman and Newman",
+  "main": "index.js",
+  "scripts": {
+    "test": "npm run test:api",
+    "test:api": "newman run \"Ecommerce API Automation.json\" -e \"ecomm-automate-env.postman_environment\" -r cli,htmlextra --reporter-htmlextra-export \"reports/newman-report.html\""
+  },
+  "keywords": ["api-testing", "postman", "newman", "automation"],
+  "author": "",
+  "license": "ISC",
+  "devDependencies": {
+    "newman": "^6.2.3",
+    "newman-reporter-htmlextra": "^1.23.1"
+  }
+}

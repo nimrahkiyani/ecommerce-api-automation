@@ -1,0 +1,102 @@
+{
+  "info": {
+    "_postman_id": "8d38e92e-22e3-411b-aace-a5e4c40d0563",
+    "name": "E-Commerce API Automation",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+    "_exporter_id": "47374947"
+  },
+  "item": [
+    {
+      "name": "New Request",
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "type": "text/javascript",
+            "exec": [
+              "pm.test(\"Status code is 200\", function () {\r\n    pm.response.to.have.status(200);\r\n});\r\n\r\npm.test(\"Response time is less than 3000ms\", function () {\r\n    pm.expect(pm.response.responseTime).to.be.below(3000);\r\n});\r\n\r\npm.test(\"Response format is JSON\", function () {\r\n    pm.expect(pm.response.headers.get(\"Content-Type\"))\r\n        .to.include(\"application/json\");\r\n});\r\n\r\nconst response = pm.response.json();\r\n\r\npm.test(\"Response contains products array\", function () {\r\n    pm.expect(response.products).to.be.an(\"array\");\r\n});\r\n\r\npm.test(\"Products array is not empty\", function () {\r\n    pm.expect(response.products.length).to.be.above(0);\r\n});\r\n\r\npm.test(\"has product preporty\" , function(){\r\n    pm.expect(response).to.have.property('products');\r\n});\r\n\r\npm.test(\"product array is not empty\"  , function () {\r\n    pm.expect(response.products.length).to.be.above(0);\r\n});\r\n\r\npm.test(\"first product has id\" , function () {\r\n    pm.expect(response.products[0]).to.have.property('id');\r\n\r\n})\r\npm.test(\"first product title is string \", function () {\r\n    pm.expect(response.products[0].title).to.be.a('string');\r\n});\r\n\r\npm.test(\"first product price is number and greater than 0\", function () {\r\n    pm.expect(response.products[0].price).to.be.a('number').and.to.be.greaterThan(0);\r\n});\r\n\r\npm.test(\"first product has rating and is numeric\" , function () {\r\n    pm.expect(response.products[0].rating).to.be.a('number').and.to.be.within(0,5);\r\n});\r\n\r\npm.test(\"Product IDs are unique\", function () {\r\n\r\n    const ids = response.products.map(product => product.id);\r\n\r\n    const uniqueIds = new Set(ids);\r\n\r\n    pm.expect(uniqueIds.size).to.eql(ids.length);\r\n\r\n});\r\npm.test(\"Pagination properties exist\", function () {\r\n\r\n    pm.expect(response).to.have.property(\"total\");\r\n    pm.expect(response).to.have.property(\"skip\");\r\n    pm.expect(response).to.have.property(\"limit\");\r\n\r\n});\r\n\r\npm.test(\"Pagination values are numbers\", function () {\r\n\r\n    pm.expect(response.total).to.be.a(\"number\");\r\n    pm.expect(response.skip).to.be.a(\"number\");\r\n    pm.expect(response.limit).to.be.a(\"number\");\r\n\r\n});\r\n\r\npm.test(\"Limit is 30\", function () {\r\n\r\n    pm.expect(response.limit).to.eql(30);\r\n\r\n});\r\n\r\npm.test(\"Skip is 0\", function () {\r\n\r\n    pm.expect(response.skip).to.eql(0);\r\n\r\n});"
+            ]
+          }
+        }
+      ],
+      "request": {
+        "method": "GET",
+        "header": [],
+        "url": {
+          "raw": "{{baseUrl}}/products",
+          "host": [
+            "{{baseUrl}}"
+          ],
+          "path": [
+            "products"
+          ]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "New Request",
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "type": "text/javascript",
+            "exec": [
+              "\r\n// Get API response\r\nconst response = pm.response.json();\r\n\r\n// TC-01: Status Code Validation\r\npm.test(\"Status code is 200\", function () {\r\n    pm.response.to.have.status(200);\r\n});\r\n\r\n// TC-02: Response Time Validation\r\npm.test(\"Response time is less than 3000ms\", function () {\r\n    pm.expect(pm.response.responseTime).to.be.below(3000);\r\n});\r\n\r\n// TC-03: Content-Type Validation\r\npm.test(\"Response format is JSON\", function () {\r\n    pm.expect(pm.response.headers.get(\"Content-Type\"))\r\n        .to.include(\"application/json\");\r\n});\r\n\r\n// TC-04: Response should be an object\r\npm.test(\"Response body is an object\", function () {\r\n    pm.expect(response).to.be.an(\"object\");\r\n    pm.expect(response).to.not.be.an(\"array\");\r\n});\r\n\r\n// TC-05: Product ID Validation\r\npm.test(\"Product ID should be 1\", function () {\r\n    pm.expect(response.id).to.eql(1);\r\n});\r\n\r\n// TC-06: Product Title Validation\r\npm.test(\"Product title is a non-empty string\", function () {\r\n    pm.expect(response.title).to.be.a(\"string\");\r\n    pm.expect(response.title.length).to.be.above(0);\r\n});\r\n\r\n// TC-07: Product Price Validation\r\npm.test(\"Product price is a number greater than 0\", function () {\r\n    pm.expect(response.price).to.be.a(\"number\");\r\n    pm.expect(response.price).to.be.above(0);\r\n});\r\n\r\n// TC-08: Product Rating Validation\r\npm.test(\"Product rating is between 0 and 5\", function () {\r\n    pm.expect(response.rating).to.be.a(\"number\");\r\n    pm.expect(response.rating).to.be.within(0, 5);\r\n});\r\n\r\n// TC-09: Category Validation\r\npm.test(\"Product category is not empty\", function () {\r\n    pm.expect(response.category).to.be.a(\"string\");\r\n    pm.expect(response.category.length).to.be.above(0);\r\n});\r\n\r\n// TC-10: Images Validation\r\npm.test(\"Product images should be an array\", function () {\r\n    pm.expect(response.images).to.be.an(\"array\");\r\n    pm.expect(response.images.length).to.be.above(0);\r\n});\r\n\r\n// TC-11: Thumbnail Validation\r\npm.test(\"Product thumbnail should be a non-empty string\", function () {\r\n    pm.expect(response.thumbnail).to.be.a(\"string\");\r\n    pm.expect(response.thumbnail.length).to.be.above(0);\r\n});\r\n\r\n// TC-12: Description Validation\r\npm.test(\"Product description should not be empty\", function () {\r\n    pm.expect(response.description).to.be.a(\"string\");\r\n    pm.expect(response.description.length).to.be.above(0);\r\n});\r\n"
+            ]
+          }
+        }
+      ],
+      "request": {
+        "method": "GET",
+        "header": [],
+        "url": {
+          "raw": "{{baseUrl}}/products/1",
+          "host": [
+            "{{baseUrl}}"
+          ],
+          "path": [
+            "products",
+            "1"
+          ]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "New Request",
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "type": "text/javascript",
+            "exec": [
+              "const response = pm.response.json();\r\n\r\npm.test(\"Search results should not be empty\", function () {\r\n    pm.expect(response.products).to.be.an(\"array\").that.is.not.empty;\r\n});\r\n\r\npm.test(\"Search total should be a number\", function () {\r\n    pm.expect(response.total).to.be.a(\"number\");\r\n});\r\n\r\npm.test(\"Every result should have valid product details\", function () {\r\n    response.products.forEach(function(product) {\r\n        pm.expect(product.id).to.be.a(\"number\");\r\n        pm.expect(product.title).to.be.a(\"string\").and.not.empty;\r\n        pm.expect(product.price).to.be.a(\"number\");\r\n    });\r\n});"
+            ]
+          }
+        }
+      ],
+      "request": {
+        "method": "GET",
+        "header": [],
+        "url": {
+          "raw": "{{baseUrl}}/products/search?q=phone",
+          "host": [
+            "{{baseUrl}}"
+          ],
+          "path": [
+            "products",
+            "search"
+          ],
+          "query": [
+            {
+              "key": "q",
+              "value": "phone"
+            }
+          ]
+        }
+      },
+      "response": []
+    }
+  ]
+}
